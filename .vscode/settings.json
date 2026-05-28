@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "C:\\users\\boss3\\appdata\\local\\programs\\python\\python312\\python.exe",
+    "python.analysis.extraPaths": [],
+    "code-runner.executorMap": {
+        "python": "C:\\users\\boss3\\appdata\\local\\programs\\python\\python312\\python.exe -u"
+    }
+}
