@@ -21,3 +21,15 @@ FPS = 60  # 초당 60프레임 고정
 # 색상 정의 (RGB 방식)
 COLOR_BG = (30, 30, 35)       # 어두운 스팀 펑크 풍의 배경색
 COLOR_WHITE = (255, 255, 255)
+
+def main():
+    running = True
+# 3. 메인 게임 루프 시작
+    while running:
+        dt = clock.tick(FPS) / 1000.0 
+
+        # A. 이벤트 핸들링 (입력 처리)
+        for event in pygame.event.get():
+            # 게임 종료 이벤트 (우측 상단 X 버튼 클릭)
+            if event.type == pygame.QUIT:
+                running = False
