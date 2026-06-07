@@ -55,8 +55,8 @@ def main():
         pygame.display.flip()
 
     # 루프 탈출 시 게임 안전하게 종료
-    pygame.quit()
-    sys.exit()
+        pygame.quit()
+        sys.exit()
         dt = clock.tick(FPS) / 1000.0 
 
         # A. 이벤트 핸들링 (입력 처리)
