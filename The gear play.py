@@ -64,3 +64,10 @@ def main():
             # 게임 종료 이벤트 (우측 상단 X 버튼 클릭)
             if event.type == pygame.QUIT:
                 running = False
+
+    # 루프 탈출 시 게임 안전하게 종료
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
