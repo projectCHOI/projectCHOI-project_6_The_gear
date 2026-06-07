@@ -26,6 +26,37 @@ def main():
     running = True
 # 3. 메인 게임 루프 시작
     while running:
+        # 프레임 제한 (60 FPS)
+        # delta_time은 나중에 프레임 독립적인 회전 애니메이션을 구현할 때 사용됩니다.
+        dt = clock.tick(FPS) / 1000.0 
+
+        # A. 이벤트 핸들링 (입력 처리)
+        for event in pygame.event.get():
+            # 게임 종료 이벤트 (우측 상단 X 버튼 클릭)
+            if event.type == pygame.QUIT:
+                running = False
+            
+            # 키보드 입력 처리
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # ESC 누르면 종료
+                    running = False
+
+            # 마우스 클릭/드래그 이벤트는 나중에 src/player.py에서 처리하여 연결할 예정입니다.
+
+        # B. 게임 상태 업데이트 (로직 처리)
+        # TODO: 톱니바퀴들의 회전각 계산, 퍼즐 정답 판정 등을 여기에 연결할 예정입니다.
+
+        # C. 화면 그리기 (렌더링)
+        screen.fill(COLOR_BG)  # 배경을 어두운 색으로 먼저 채우기
+
+        # TODO: 톱니바퀴 스프라이트, UI, 한글 텍스트(서평원 꺾깎체) 등을 여기에 그릴 예정입니다.
+
+        # 최종적으로 그린 화면을 모니터에 반영
+        pygame.display.flip()
+
+    # 루프 탈출 시 게임 안전하게 종료
+    pygame.quit()
+    sys.exit()
         dt = clock.tick(FPS) / 1000.0 
 
         # A. 이벤트 핸들링 (입력 처리)
