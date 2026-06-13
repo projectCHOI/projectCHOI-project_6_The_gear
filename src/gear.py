@@ -26,3 +26,8 @@ class Gear:
             except pygame.error:
                 print(f"경고: {image_path} 이미지를 로드할 수 없습니다. 기본 도형으로 대체합니다.")
                 self.original_image = None
+
+        def connect(self, other_gear):
+                if other_gear not in self.connected_gears:
+                    self.connected_gears.append(other_gear)
+                    other_gear.connected_gears.append(self)
