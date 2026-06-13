@@ -62,3 +62,24 @@ class Gear:
                 
         # 다음 프레임 계산을 위해 현재 각도를 저장
         self.prev_angle = self.angle
+
+    def draw(self, screen):
+        """화면에 톱니바퀴를 그리는 함수"""
+        if self.original_image:
+            # Pygame에서 이미지를 회전하면 이미지가 커지므로, 중심축이 틀어지지 않도록 보정 렌더링
+            rotated_image = pygame.transform.rotate(self.original_image, self.angle)
+            new_rect = rotated_image.get_rect(center=(self.x, self.y))
+            screen.blit(rotated_image, new_rect.topleft)
+        else:
+            # 이미지가 없을 경우 개발용 임시 원형 도형 그리기
+            # 중심원
+            pygame.draw.circle(screen, (150, 150, 150), (self.x, self.y), self.radius, 2)
+            # 회전하는 것을 눈으로 확인하기 위한 기준선(바늘) 그리기
+            rad = math.radians(self.angle)
+            end_x = self.x + self.radius * math.cos(rad)
+            end_y = self.y - self.radius * math.sin(rad)  # Y축은 아래가 +이므로 빼줍니다.
+            pygame.draw.line(screen, (255, 100, 100), (self.x, self.y), (end_x, end_y), 3)
+            
+            # 동력원인 경우 중심에 작은 노란 점 표시
+            if self.is_driver:
+                pygame.draw.circle(screen, (255, 215, 0), (self.x, self.y), 8)
