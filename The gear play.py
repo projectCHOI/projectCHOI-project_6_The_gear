@@ -2,13 +2,15 @@ import pygame
 import sys
 import os
 
+# src 폴더 내부의 모듈을 안전하게 불러오기 위한 경로 설정
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+from stage import PuzzleManager
 
 # 1. 초기화 및 기본 설정
 pygame.init()
-pygame.mixer.init()  # 사운드 시스템 초기화
+pygame.mixer.init()
 
-# 화면 크기 설정 (톱니바퀴 퍼즐에 적합한 16:9 해상도)
+# 화면 크기 설정
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -16,56 +18,45 @@ pygame.display.set_caption("The Gear : The Puzzler")
 
 # 2. 게임 상태 및 프레임 제어 시간 설정
 clock = pygame.time.Clock()
-FPS = 60  # 초당 60프레임 고정
+FPS = 60
 
-# 색상 정의 (RGB 방식)
-COLOR_BG = (30, 30, 35)       # 어두운 스팀 펑크 풍의 배경색
-COLOR_WHITE = (255, 255, 255)
+# 색상 정의
+COLOR_BG = (30, 30, 35)
 
 def main():
+    """게임의 메인 루프를 담당하는 함수"""
+    # [★추가] 퍼즐 매니저 객체 생성 (레벨 1을 자동으로 불러옵니다)
+    puzzle_manager = PuzzleManager()
+    
     running = True
-# 3. 메인 게임 루프 시작
+    print("Core 3.12 Engine & Pygame initialized successfully!")
+
+    # 3. 메인 게임 루프 시작
     while running:
-        # 프레임 제한 (60 FPS)
-        # delta_time은 나중에 프레임 독립적인 회전 애니메이션을 구현할 때 사용됩니다.
+        # 프레임 제한 및 delta time 계산
         dt = clock.tick(FPS) / 1000.0 
 
         # A. 이벤트 핸들링 (입력 처리)
         for event in pygame.event.get():
-            # 게임 종료 이벤트 (우측 상단 X 버튼 클릭)
             if event.type == pygame.QUIT:
                 running = False
-            
-            # 키보드 입력 처리
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:  # ESC 누르면 종료
+                if event.key == pygame.K_ESCAPE:
                     running = False
 
-            # 마우스 클릭/드래그 이벤트는 나중에 src/player.py에서 처리하여 연결할 예정입니다.
-
         # B. 게임 상태 업데이트 (로직 처리)
-        # TODO: 톱니바퀴들의 회전각 계산, 퍼즐 정답 판정 등을 여기에 연결할 예정입니다.
+        # [★추가] 매 프레임마다 톱니바퀴들의 회전각을 계산하고 클리어 조건을 검사합니다.
+        puzzle_manager.update(dt)
 
         # C. 화면 그리기 (렌더링)
-        screen.fill(COLOR_BG)  # 배경을 어두운 색으로 먼저 채우기
+        screen.fill(COLOR_BG)
 
-        # TODO: 톱니바퀴 스프라이트, UI, 한글 텍스트(서평원 꺾깎체) 등을 여기에 그릴 예정입니다.
+        # [★추가] 퍼즐 매니저가 관리하는 모든 톱니바퀴들을 화면에 그립니다.
+        puzzle_manager.draw(screen)
 
         # 최종적으로 그린 화면을 모니터에 반영
         pygame.display.flip()
 
-    # 루프 탈출 시 게임 안전하게 종료
-        pygame.quit()
-        sys.exit()
-        dt = clock.tick(FPS) / 1000.0 
-
-        # A. 이벤트 핸들링 (입력 처리)
-        for event in pygame.event.get():
-            # 게임 종료 이벤트 (우측 상단 X 버튼 클릭)
-            if event.type == pygame.QUIT:
-                running = False
-
-    # 루프 탈출 시 게임 안전하게 종료
     pygame.quit()
     sys.exit()
 
