@@ -27,4 +27,25 @@ class PuzzleManager:
             self.gears.append(driver_gear)
             self.gears.append(target_gear)
             
-            print(f"Level {level_num} loaded successfully.")
+                def update(self, dt):
+                    if not self.gears:
+                        return
+            
+                    for gear in self.gears:
+                        if gear.is_driver:
+                            gear.update_rotation(dt)
+                            break  
+            
+                    self.check_clear_condition()
+                    
+                def check_clear_condition(self):
+                        if self.current_level == 1 and len(self.gears) >= 2:
+                            target_gear = self.gears[1]  
+                            if abs(target_gear.angle) >= 360.0:
+                                if not self.is_cleared:
+                                    self.is_cleared = True
+                                    print("Level 1 Cleared!")
+                
+                    def draw(self, screen):
+                        for gear in self.gears:
+                            gear.draw(screen)
