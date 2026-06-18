@@ -32,3 +32,26 @@ class PlayerController:
             if event.button == 1:  # 마우스 왼쪽 버튼을 떼면 조작 해제
                 self.is_dragging = False
                 self.selected_gear = None
+
+    def update(self, gears):
+        """마우스를 드래그하고 있을 때 실시간으로 톱니바퀴 각도를 변화시키는 함수"""
+        if self.is_dragging and self.selected_gear:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            
+            # 현재 마우스가 톱니바퀴 중심을 기준으로 몇 도 위치에 있는지 계산
+            current_mouse_angle = self.calculate_angle(mouse_x, mouse_y, self.selected_gear)
+            
+            # 직전 프레임 각도와 현재 각도의 차이(변화량) 계산
+            angle_delta = current_mouse_angle - self.last_mouse_angle
+            
+            # 각도가 180도에서 -180도로 급격하게 바뀌는 경계선 보정 (-360도 평활화)
+            if angle_delta > 180:
+                angle_delta -= 360
+            elif angle_delta < -180:
+                angle_delta += 360
+                
+            # 계산된 변화량만큼 동력원 톱니바퀴를 직접 회전시킴
+            self.selected_gear.angle += angle_delta
+            
+            # 다음 프레임 연산을 위해 현재 각도를 백업
+            self.last_mouse_angle = current_mouse_angle                
