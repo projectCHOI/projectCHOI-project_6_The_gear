@@ -55,3 +55,10 @@ class PlayerController:
             
             # 다음 프레임 연산을 위해 현재 각도를 백업
             self.last_mouse_angle = current_mouse_angle                
+
+    def calculate_angle(self, m_x, m_y, gear):
+            """톱니바퀴 중심과 마우스 좌표 사이의 삼각함수 아크탄젠트(atan2) 각도 계산"""
+            # 수학적 각도(라디안)를 도(Degree) 단위로 변환
+            radians = math.atan2(gear.y - m_y, m_x - gear.x)
+            degrees = math.degrees(radians)
+            return degrees
