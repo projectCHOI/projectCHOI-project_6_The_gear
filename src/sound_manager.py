@@ -32,3 +32,13 @@ class SoundManager:
                 
         except pygame.error as e:
             print(f"사운드 시스템 로드 중 오류 발생: {e}")
+
+    def play_bgm(self, filename="bgm.mp3"):
+        """배경음악을 스트리밍 방식으로 무한 반복 재생하는 함수"""
+        bgm_path = os.path.join(self.base_path, filename)
+        if os.path.exists(bgm_path):
+            pygame.mixer.music.load(bgm_path)
+            pygame.mixer.music.play(-1)  # -1은 무한 루프 반복
+            print(f"🎵 배경음악 재생 시작: {filename}")
+        else:
+            print(f"안내: {bgm_path} 배경음악 파일이 없습니다.")
