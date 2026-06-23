@@ -42,3 +42,11 @@ class SoundManager:
             print(f"🎵 배경음악 재생 시작: {filename}")
         else:
             print(f"안내: {bgm_path} 배경음악 파일이 없습니다.")
+    def stop_bgm(self):
+        """배경음악을 일시 정지하거나 끄는 함수"""
+        pygame.mixer.music.stop()
+
+    def play_effect(self, name):
+        """딕셔너리에 등록된 효과음(install, clear 등)을 찾아 즉시 출력하는 함수"""
+        if name in self.effects and self.effects[name]:
+            self.effects[name].play()
