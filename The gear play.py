@@ -2,11 +2,13 @@ import pygame
 import sys
 import os
 
+# 1. 시스템 경로 등록 규칙 유지
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'assets', 'music'))
 
 from stage import PuzzleManager
 from player import PlayerController
-from sound_manager import SoundManager  # 사운드 매니저 불러오기
+from sound_manager import SoundManager
 
 pygame.init()
 pygame.mixer.init()
@@ -24,13 +26,14 @@ COLOR_TEXT = (220, 220, 220)
 def main():
     puzzle_manager = PuzzleManager()
     player_controller = PlayerController()
-    sound_manager = SoundManager()  # 사운드 관리자 인스턴스 생성
-    # 게임이 시작되자마자 배경음악 재생 지시
-    sound_manager.play_bgm("bgm.mp3")
+    sound_manager = SoundManager()  
+    # 대기화면 음악을 먼저 켜고 싶다면 "main"
+    # 바로 인게임 음악을 켜고 싶다면 "play"
+    sound_manager.play_bgm("main")
     
     # 효과음 중복 재생 방지용 플래그
     clear_sound_played = False
-    
+    fail_sound_played = False    
     font = pygame.font.SysFont("malgungothic", 28)
     running = True
 
@@ -54,11 +57,10 @@ def main():
 
         player_controller.update(puzzle_manager.gears)
         puzzle_manager.update(dt)
-
-        screen.fill(COLOR_BG)
+        screen.fill((30, 30, 35))
         puzzle_manager.draw(screen)
 
-        level_text = font.render(f"STAGE {puzzle_manager.current_level} : 우물 속의 열쇠", True, COLOR_TEXT)
+        level_text = font.render(f"STAGE {puzzle_manager.current_level} : 우물 속의 열쇠", True, (220, 220, 220))
         screen.blit(level_text, (30, 30))
         
         # 스테이지가 클리어된 순간 딱 한 번만 클리어 음악 재생
