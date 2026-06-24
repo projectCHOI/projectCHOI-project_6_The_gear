@@ -4,7 +4,7 @@ import os
 
 # 1. 시스템 경로 등록 규칙 유지
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
-sys.path.append(os.path.join(os.path.dirname(__file__), 'assets', 'music'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'assets', 'sounds'))
 
 from stage import PuzzleManager
 from player import PlayerController
