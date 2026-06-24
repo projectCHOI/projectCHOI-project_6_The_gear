@@ -66,13 +66,12 @@ def main():
         # 스테이지가 클리어된 순간 딱 한 번만 클리어 음악 재생
         if puzzle_manager.is_cleared:
             if not clear_sound_played:
-                sound_manager.stop_bgm()           # 배경음악을 끄고
-                sound_manager.play_effect("clear") # 클리어 음악 분출
+                sound_manager.stop_bgm()           
+                sound_manager.play_effect("clear") 
                 clear_sound_played = True
                 
             clear_text = font.render("🎉 STAGE CLEAR! (ESC를 눌러 종료)", True, (100, 255, 100))
-            screen.blit(clear_text, (SCREEN_WIDTH // 2 - 180, 50))
-
+            screen.blit(clear_text, (1280 // 2 - 180, 50))
         pygame.display.flip()
 
     pygame.quit()
