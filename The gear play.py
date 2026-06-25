@@ -46,13 +46,9 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-            
-            # 마우스 클릭으로 톱니바퀴를 잡는 이벤트 순간 감시
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                # 톱니바퀴를 붙잡았는지 체크하기 전 개수 백업
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 player_controller.handle_event(event, puzzle_manager.gears)
                 if player_controller.is_dragging:
-                    # 성공적으로 톱니를 조작하기 시작하면 설치/체결 효과음 재생
                     sound_manager.play_effect("install")
 
         player_controller.update(puzzle_manager.gears)
