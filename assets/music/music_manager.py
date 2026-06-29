@@ -48,3 +48,18 @@ def play_bgm(self, state="play"):
             print(f"🎵 배경음악 재생: {filename}")
         else:
             print(f"안내: {bgm_path} 파일이 없습니다.")
+
+def stop_bgm(self):
+        pygame.mixer.music.stop()
+
+def play_effect(self, name):
+    """일반 효과음 재생"""
+    if name in self.effects:
+        self.effects[name].play()
+
+def play_install_sound(self):
+    """5개의 설치 효과음 중 하나를 무작위로 골라 재생하는 함수"""
+    if self.install_sounds:
+        # 리스트에 담긴 5개 소리 중 무작위 하나 선택
+        chosen_sound = random.choice(self.install_sounds)
+        chosen_sound.play()
