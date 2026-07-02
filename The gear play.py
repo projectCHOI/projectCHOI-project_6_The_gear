@@ -29,10 +29,23 @@ COLOR_TEXT = (220, 220, 220)
 def main():
     puzzle_manager = PuzzleManager()
     player_controller = PlayerController()
-    
-    # 3. 양대 사운드 자산 관리 시스템 인스턴스 생성
     sound_manager = SoundManager()
     music_manager = MusicManager()
-    
-    # [SoundManager 담당] 대기화면 음악 구동
     sound_manager.play_bgm("main")
+    clear_sound_played = False
+    font = pygame.font.SysFont("malgungothic", 28)
+    running = True
+
+    while running:
+        dt = clock.tick(FPS) / 1000.0 
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                player_controller.handle_event(event, puzzle_manager.gears)
+                if player_controller.is_dragging:
+                    music_manager.play_install_sound()
