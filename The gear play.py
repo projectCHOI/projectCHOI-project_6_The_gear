@@ -49,3 +49,29 @@ def main():
                 player_controller.handle_event(event, puzzle_manager.gears)
                 if player_controller.is_dragging:
                     music_manager.play_install_sound()
+
+        player_controller.update(puzzle_manager.gears)
+        puzzle_manager.update(dt)
+
+        screen.fill(COLOR_BG)
+        puzzle_manager.draw(screen)
+
+        level_text = font.render(f"STAGE {puzzle_manager.current_level} : 우물 속의 열쇠", True, COLOR_TEXT)
+        screen.blit(level_text, (30, 30))
+        
+        if puzzle_manager.is_cleared:
+            if not clear_sound_played:
+                sound_manager.stop_bgm()           
+                sound_manager.play_effect("clear") 
+                clear_sound_played = True
+                
+            clear_text = font.render("🎉 STAGE CLEAR! (ESC를 눌러 종료)", True, (100, 255, 100))
+            screen.blit(clear_text, (1280 // 2 - 180, 50))
+
+        pygame.display.flip()
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
