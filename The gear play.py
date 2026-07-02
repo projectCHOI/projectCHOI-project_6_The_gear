@@ -25,3 +25,14 @@ clock = pygame.time.Clock()
 FPS = 60
 COLOR_BG = (30, 30, 35)
 COLOR_TEXT = (220, 220, 220)
+
+def main():
+    puzzle_manager = PuzzleManager()
+    player_controller = PlayerController()
+    
+    # 3. 양대 사운드 자산 관리 시스템 인스턴스 생성
+    sound_manager = SoundManager()
+    music_manager = MusicManager()
+    
+    # [SoundManager 담당] 대기화면 음악 구동
+    sound_manager.play_bgm("main")
