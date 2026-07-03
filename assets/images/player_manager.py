@@ -26,3 +26,16 @@ class PlayerManager:
         self.y = screen_height - 160
         # 상태별 애니메이션 처리를 위한 타이머 변수
         self.animation_timer = 0.0
+
+    def _load_player_image(self):
+        if os.path.exists(self.image_path):
+            try:
+                img = pygame.image.load(self.image_path).convert_alpha()
+                # 캐릭터에 적합한 사이즈(예: 가로 96 x 세로 96 픽셀)로 부드럽게 스케일링
+                return pygame.transform.smoothscale(img, (96, 96))
+            except pygame.error:
+                print(f"경고: {self.image_path} 파일 손상 또는 로드 불가. 기본 사각형으로 대체합니다.")
+                return None
+        else:
+            print(f"안내: {self.image_path} 이미지가 존재하지 않습니다. 기본 사각형으로 대체합니다.")
+        return None
