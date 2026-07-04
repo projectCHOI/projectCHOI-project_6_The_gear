@@ -52,3 +52,22 @@ class PlayerManager:
         else:
             print(f"안내: {self.image_path} 이미지가 존재하지 않습니다. 기본 사각형으로 대체합니다.")
         return None
+
+    def update(self, dt, is_player_dragging):
+        # A. 마우스 드래그 상태에 따라 실시간 상태 전환 (IDLE <-> ROTATING)
+        if is_player_dragging:
+            self.current_state = "ROTATING"
+        else:
+            self.current_state = "IDLE"
+
+        # B. 상태별 렌더링 이미지 제어 (애니메이션 연출)
+        if self.raw_image:
+            self.animation_timer += dt
+            if self.current_state == "ROTATING":
+                # 톱니바퀴를 돌릴 때 캐릭터가 역동적으로 힘을 쓰듯 미세하게 들썩이는 효과 (사인파 활용)
+                bounce = int(math.sin(self.animation_timer * 15) * 4) if 'math' in globals() else 0
+                # 회전 액션을 시각적으로 표현하기 위해 약간 기울이거나 오프셋을 줄 수 있습니다.
+                self.current_image = self.raw_image
+            else:
+                # 대기 상태일 때는 기본 이미지 유지
+                self.current_image = self.raw_image
