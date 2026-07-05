@@ -79,3 +79,11 @@ class PlayerManager:
     def add_score(self, amount):
         if amount > 0:
             self.score += amount
+
+    def use_gear_from_inventory(self, gear_type):
+        if gear_type in self.inventory and self.inventory[gear_type] > 0:
+            self.inventory[gear_type] -= 1
+            print(f"⚙️ {gear_type} 1개 사용됨. 남은 개수: {self.inventory[gear_type]}")
+            return True
+        print(f"❌ {gear_type} 부품이 부족합니다!")
+        return False
