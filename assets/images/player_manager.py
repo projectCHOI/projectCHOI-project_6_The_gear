@@ -71,3 +71,7 @@ class PlayerManager:
             else:
                 # 대기 상태일 때는 기본 이미지 유지
                 self.current_image = self.raw_image
+
+    def add_gold(self, amount):
+        if amount > 0:
+            self.gold += amount
