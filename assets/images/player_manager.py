@@ -75,3 +75,7 @@ class PlayerManager:
     def add_gold(self, amount):
         if amount > 0:
             self.gold += amount
+
+    def add_score(self, amount):
+        if amount > 0:
+            self.score += amount
