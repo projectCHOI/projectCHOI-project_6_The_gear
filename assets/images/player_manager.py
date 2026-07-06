@@ -87,3 +87,16 @@ class PlayerManager:
             return True
         print(f"❌ {gear_type} 부품이 부족합니다!")
         return False
+
+    def draw(self, screen):
+        # 1. 캐릭터 이미지 그리기
+        if self.current_image:
+            # 톱니 조작 중일 때 미세한 바운스 효과가 적용된 좌표로 드로우
+            draw_y = self.y
+            if self.current_state == "ROTATING":
+                import math
+                draw_y += int(math.sin(self.animation_timer * 20) * 3)
+            screen.blit(self.current_image, (self.x, draw_y))
+        else:
+            # player.png가 없을 때 영역 식별을 위한 임시 초록색 사각형
+            pygame.draw.rect(screen, (50, 200, 50), (self.x, self.y, 96, 96))
