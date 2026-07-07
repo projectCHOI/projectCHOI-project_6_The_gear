@@ -37,10 +37,9 @@ def play_bgm(self, state="play"):
         else:
             print(f"안내: {bgm_path} 파일이 없습니다.")
 
-    def stop_bgm(self):
-        pygame.mixer.music.stop()
+def stop_bgm(self):
+    pygame.mixer.music.stop()
 
-    def play_effect(self, name):
-        """클리어 혹은 실패 연출 음악 재생"""
-        if name in self.effects:
-            self.effects[name].play()
+def play_effect(self, name):
+    if name in self.effects:
+        self.effects[name].play()

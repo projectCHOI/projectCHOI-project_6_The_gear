@@ -1,5 +1,6 @@
 import pygame
 import os
+import math
 
 class PlayerManager:
     def __init__(self, screen_width, screen_height):
