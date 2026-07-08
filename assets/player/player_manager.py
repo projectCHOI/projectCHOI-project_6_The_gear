@@ -76,3 +76,66 @@ class PlayerManager:
             if event.button == 1:  # 마우스 왼쪽 버튼을 떼면 조작 해제
                 self.is_dragging = False
                 self.selected_gear = None
+
+    def update(self, dt):
+            if self.is_dragging and self.selected_gear:
+                self.current_state = "ROTATING"
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                
+                # 현재 마우스가 톱니바퀴 중심을 기준으로 몇 도 위치에 있는지 계산
+                current_mouse_angle = self.calculate_angle(mouse_x, mouse_y, self.selected_gear)
+                
+                # 직전 프레임 각도와 현재 각도의 차이(변화량) 계산
+                angle_delta = current_mouse_angle - self.last_mouse_angle
+                
+                # 각도가 180도에서 -180도로 급격하게 바뀌는 경계선 보정 (-360도 평활화)
+                if angle_delta > 180:
+                    angle_delta -= 360
+                elif angle_delta < -180:
+                    angle_delta += 360
+                    
+                # 계산된 변화량만큼 동력원 톱니바퀴를 직접 회전시킴
+                self.selected_gear.angle += angle_delta
+                
+                # 다음 프레임 연산을 위해 현재 각도를 백업
+                self.last_mouse_angle = current_mouse_angle
+            else:
+                self.current_state = "IDLE"
+
+            # B. 상태별 렌더링 애니메이션 처리
+            if self.raw_image:
+                self.animation_timer += dt
+                if self.current_state == "ROTATING":
+                    # 톱니바퀴를 돌릴 때 캐릭터가 역동적으로 힘을 쓰듯 미세하게 들썩이는 효과 (사인파 활용)
+                    self.current_image = self.raw_image
+                else:
+                    self.current_image = self.raw_image
+
+    def calculate_angle(self, m_x, m_y, gear):
+        radians = math.atan2(gear.y - m_y, m_x - gear.x)
+        return math.degrees(radians)
+
+    def add_gold(self, amount):
+        if amount > 0:
+            self.gold += amount
+
+    def add_score(self, amount):
+        if amount > 0:
+            self.score += amount
+
+    def use_gear_from_inventory(self, gear_type):
+        if gear_type in self.inventory and self.inventory[gear_type] > 0:
+            self.inventory[gear_type] -= 1
+            print(f"⚙️ {gear_type} 1개 사용됨. 남은 개수: {self.inventory[gear_type]}")
+            return True
+        print(f"❌ {gear_type} 부품이 부족합니다!")
+        return False
+
+    def draw(self, screen):
+        if self.current_image:
+            draw_y = self.y
+            if self.current_state == "ROTATING":
+                draw_y += int(math.sin(self.animation_timer * 20) * 3)
+            screen.blit(self.current_image, (self.x, draw_y))
+        else:
+            pygame.draw.rect(screen, (50, 200, 50), (self.x, self.y, 96, 96))

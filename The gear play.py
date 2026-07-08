@@ -4,7 +4,6 @@ import os
 
 # Pylance 검사기와 파이썬 엔진 모두가 인식 가능한 패키지 절대 경로 임포트 규칙 기법
 from assets.stage.puzzle import PuzzleManager
-from assets.player.player import PlayerController
 from assets.player.player_manager import PlayerManager
 from assets.sounds.sound_manager import SoundManager
 from assets.music.music_manager import MusicManager
@@ -24,11 +23,7 @@ COLOR_TEXT = (220, 220, 220)
 
 def main():
     puzzle_manager = PuzzleManager()
-    player_controller = PlayerController()
-    
-    # 플레이어 관리 매니저 인스턴스 생성
     player_manager = PlayerManager(SCREEN_WIDTH, SCREEN_HEIGHT)
-    
     sound_manager = SoundManager()
     music_manager = MusicManager()
     
@@ -49,12 +44,13 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
             
-            # 마우스 클릭 감시
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                player_controller.handle_event(event, puzzle_manager.gears)
-                if player_controller.is_dragging:
-                    music_manager.play_install_sound()
-
+            elif event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
+                player_manager.handle_event(event, puzzle_manager.gears)
+                
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if player_manager.is_dragging:
+                        music_manager.play_install_sound()
+###########
         player_controller.update(puzzle_manager.gears)
         player_manager.update(dt, player_controller.is_dragging)
         puzzle_manager.update(dt)
