@@ -50,14 +50,13 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if player_manager.is_dragging:
                         music_manager.play_install_sound()
-###########
-        player_controller.update(puzzle_manager.gears)
-        player_manager.update(dt, player_controller.is_dragging)
+        # 내부 로직 실시간 업데이트
+        player_manager.update(dt)  # ◀ 내부에서 마우스 드래그와 애니메이션을 동시에 연산합니다.
         puzzle_manager.update(dt)
 
         screen.fill(COLOR_BG)
         
-        # 렌더링 레이어 순서 제어
+        # 렌더링 레이어 출력
         puzzle_manager.draw(screen)
         player_manager.draw(screen)
 
