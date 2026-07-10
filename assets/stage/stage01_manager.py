@@ -1,2 +1,1 @@
-import pygame
-import os
+from gear import Gear
