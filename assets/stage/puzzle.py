@@ -31,3 +31,26 @@ def load_level(self, level_num):
     def update(self, dt):
         if not self.gears:
             return
+        
+        # 동력원 톱니바퀴를 찾아 회전력을 전파시킵니다.
+        for gear in self.gears:
+            if gear.is_driver:
+                gear.update_rotation(dt)
+                break  
+        
+        self.check_clear_condition()
+        
+    def check_clear_condition(self):
+        """이식받은 클리어 데이터 조건을 기반으로 유연하게 성공 여부 판정"""
+        if not self.clear_condition or not self.gears:
+            return
+
+        target_idx = self.clear_condition["target_index"]
+        req_angle = self.clear_condition["required_angle"]
+
+        if len(self.gears) > target_idx:
+            target_gear = self.gears[target_idx]  
+            if abs(target_gear.angle) >= req_angle:
+                if not self.is_cleared:
+                    self.is_cleared = True
+                    print(f"🎉 Level {self.current_level} Cleared!")
