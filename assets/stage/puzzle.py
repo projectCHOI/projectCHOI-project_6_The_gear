@@ -41,7 +41,6 @@ def load_level(self, level_num):
         self.check_clear_condition()
         
     def check_clear_condition(self):
-        """이식받은 클리어 데이터 조건을 기반으로 유연하게 성공 여부 판정"""
         if not self.clear_condition or not self.gears:
             return
 
@@ -54,3 +53,7 @@ def load_level(self, level_num):
                 if not self.is_cleared:
                     self.is_cleared = True
                     print(f"🎉 Level {self.current_level} Cleared!")
+
+    def draw(self, screen):
+        for gear in self.gears:
+            gear.draw(screen)
