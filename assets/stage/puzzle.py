@@ -28,7 +28,7 @@ def load_level(self, level_num):
         except Exception as e:
             print(f"❌ 레벨 {level_num} 데이터 팩을 로드하는 중 오류 발생: {e}")
 
-    def update(self, dt):
+def update(self, dt):
         if not self.gears:
             return
         
@@ -40,7 +40,7 @@ def load_level(self, level_num):
         
         self.check_clear_condition()
         
-    def check_clear_condition(self):
+def check_clear_condition(self):
         if not self.clear_condition or not self.gears:
             return
 
@@ -54,6 +54,6 @@ def load_level(self, level_num):
                     self.is_cleared = True
                     print(f"🎉 Level {self.current_level} Cleared!")
 
-    def draw(self, screen):
+def draw(self, screen):
         for gear in self.gears:
             gear.draw(screen)
