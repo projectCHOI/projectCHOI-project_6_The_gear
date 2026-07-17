@@ -44,12 +44,17 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
             
-            elif event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
-                player_manager.handle_event(event, puzzle_manager.gears)
-                
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if player_manager.is_dragging:
-                        music_manager.play_install_sound()
+                elif event.key == pygame.K_SPACE and puzzle_manager.is_cleared:
+                    next_level = puzzle_manager.current_level + 1
+                    
+                    # 최대 스테이지(5스테이지)를 초과하지 않았는지 체크
+                    if next_level <= 5:
+                        puzzle_manager.load_level(next_level)
+                        # 사운드 상태 및 플래그 초기화 후 배경음 재시작
+                        clear_sound_played = False
+                        sound_manager.play_bgm("main") 
+                    else:
+                        print("모든 스테이지를 정복하셨습니다!")
         # 내부 로직 실시간 업데이트
         player_manager.update(dt)  # ◀ 내부에서 마우스 드래그와 애니메이션을 동시에 연산합니다.
         puzzle_manager.update(dt)
