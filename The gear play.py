@@ -55,9 +55,18 @@ def main():
                         sound_manager.play_bgm("main") 
                     else:
                         print("모든 스테이지를 정복하셨습니다!")
-        # 내부 로직 실시간 업데이트
-        player_manager.update(dt)  # ◀ 내부에서 마우스 드래그와 애니메이션을 동시에 연산합니다.
-        puzzle_manager.update(dt)
+            # 마우스 클릭 이벤트 처리 (클리어하지 않은 일반 상태에서만 조작 가능하도록 제어)
+            elif not puzzle_manager.is_cleared and (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP):
+                player_manager.handle_event(event, puzzle_manager.gears)
+                
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if player_manager.is_dragging:
+                        music_manager.play_install_sound()
+
+        # 내부 로직 실시간 업데이트 (클리어하지 않은 상태에서만 기어가 돌아감)
+        if not puzzle_manager.is_cleared:
+            player_manager.update(dt)
+            puzzle_manager.update(dt)
 
         screen.fill(COLOR_BG)
         
