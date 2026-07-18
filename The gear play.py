@@ -83,8 +83,12 @@ def main():
                 sound_manager.play_effect("clear") 
                 clear_sound_played = True
                 
-            clear_text = font.render("🎉 STAGE CLEAR! (ESC를 눌러 종료)", True, (100, 255, 100))
-            screen.blit(clear_text, (1280 // 2 - 180, 50))
+            if puzzle_manager.current_level < 5:
+                clear_text = font.render("🎉 STAGE CLEAR! (SPACE를 눌러 다음 단계로)", True, (100, 255, 100))
+            else:
+                clear_text = font.render("🏆 ALL STAGES CLEARED! 게임을 모두 완료했습니다!", True, (255, 215, 0))
+                
+            screen.blit(clear_text, (1280 // 2 - 250, 50))
 
         pygame.display.flip()
 
