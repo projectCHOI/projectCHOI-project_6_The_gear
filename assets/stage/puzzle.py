@@ -20,3 +20,19 @@ class PuzzleManager:
         self.door_rect = pygame.Rect(1050, 260, 120, 200) # 화면 우측 끝 배치
         
         self.load_level(self.current_level)
+        
+    def load_level(self, level_num):
+        self.gears.clear()
+        self.is_cleared = False
+        self.is_box_open = False
+        self.has_key = False
+        self.door_unlocked = False
+        self.current_level = level_num
+
+        stage_module_name = f"stage{level_num:02d}_manager"
+        try:
+            stage_module = __import__(stage_module_name)
+            self.gears, self.clear_condition = stage_module.get_stage_data()
+            print(f"📦 레벨 {level_num} 스토리 동기 팩 이식 완료.")
+        except Exception as e:
+            print(f"❌ 로드 오류: {e}")
