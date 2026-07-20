@@ -2,7 +2,6 @@ import pygame
 import sys
 import os
 
-# Pylance 검사기와 파이썬 엔진 모두가 인식 가능한 패키지 절대 경로 임포트 규칙 기법
 from assets.stage.puzzle import PuzzleManager
 from assets.player.player_manager import PlayerManager
 from assets.sounds.sound_manager import SoundManager
@@ -20,77 +19,3 @@ clock = pygame.time.Clock()
 FPS = 60
 COLOR_BG = (30, 30, 35)
 COLOR_TEXT = (220, 220, 220)
-
-def main():
-    puzzle_manager = PuzzleManager()
-    player_manager = PlayerManager(SCREEN_WIDTH, SCREEN_HEIGHT)
-    sound_manager = SoundManager()
-    music_manager = MusicManager()
-    
-    # 대기화면 음악 구동
-    sound_manager.play_bgm("main")
-    
-    clear_sound_played = False
-    font = pygame.font.SysFont("malgungothic", 28)
-    running = True
-
-    while running:
-        dt = clock.tick(FPS) / 1000.0 
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-            
-                elif event.key == pygame.K_SPACE and puzzle_manager.is_cleared:
-                    next_level = puzzle_manager.current_level + 1
-                    
-                    # 최대 스테이지(5스테이지)를 초과하지 않았는지 체크
-                    if next_level <= 5:
-                        puzzle_manager.load_level(next_level)
-                        # 사운드 상태 및 플래그 초기화 후 배경음 재시작
-                        clear_sound_played = False
-                        sound_manager.play_bgm("main") 
-                    else:
-                        print("모든 스테이지를 정복하셨습니다!")
-            # 마우스 클릭 이벤트 처리 (클리어하지 않은 일반 상태에서만 조작 가능하도록 제어)
-            elif not puzzle_manager.is_cleared and (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP):
-                player_manager.handle_event(event, puzzle_manager.gears)
-                
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if player_manager.is_dragging:
-                        music_manager.play_install_sound()
-
-        # 내부 로직 실시간 업데이트 (클리어하지 않은 상태에서만 기어가 돌아감)
-        if not puzzle_manager.is_cleared:
-            player_manager.update(dt)
-            puzzle_manager.update(dt)
-
-        screen.fill(COLOR_BG)
-        
-        # 렌더링 레이어 출력
-        puzzle_manager.draw(screen)
-        player_manager.draw(screen)
-
-        level_text = font.render(f"STAGE {puzzle_manager.current_level} : 우물 속의 열쇠", True, COLOR_TEXT)
-        screen.blit(level_text, (30, 30))
-        
-        if puzzle_manager.is_cleared:
-            if not clear_sound_played:
-                sound_manager.stop_bgm()           
-                sound_manager.play_effect("clear") 
-                clear_sound_played = True
-                
-            if puzzle_manager.current_level < 5:
-                clear_text = font.render("🎉 STAGE CLEAR! (SPACE를 눌러 다음 단계로)", True, (100, 255, 100))
-            else:
-                clear_text = font.render("🏆 ALL STAGES CLEARED! 게임을 모두 완료했습니다!", True, (255, 215, 0))
-                
-            screen.blit(clear_text, (1280 // 2 - 250, 50))
-
-        pygame.display.flip()
-
-    pygame.quit()
-    sys.exit()
