@@ -71,3 +71,48 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 player_manager.handle_event(event, puzzle_manager.gears)
+
+        # 상태 실시간 제어
+        player_manager.update(dt)
+        puzzle_manager.update(dt)
+
+        screen.fill(COLOR_BG)
+        puzzle_manager.draw(screen)
+        player_manager.draw(screen)
+
+        # 📜 상황별 동선 안내 자막 UI 갱신 규칙
+        level_text = font.render(f"STAGE {puzzle_manager.current_level} : 우물 속의 열쇠", True, COLOR_TEXT)
+        screen.blit(level_text, (30, 30))
+        
+        # 하단 미션 가이드라인 문자열 출력
+        if not puzzle_manager.is_box_open:
+            guide_str = "🎯 동력원 기어를 돌려 잠긴 보물상자를 개방하세요!"
+        elif puzzle_manager.is_box_open and not puzzle_manager.has_key:
+            guide_str = "🔍 상자가 열렸습니다! 내부의 황금 열쇠[KEY]를 클릭하여 획득하세요!"
+        elif puzzle_manager.has_key and not puzzle_manager.door_unlocked:
+            guide_str = "🚪 열쇠를 가방에 챙겼습니다! 우측의 굳게 닫힌 문을 클릭해 잠금을 해제하세요!"
+        else:
+            guide_str = "🎉 문이 열렸습니다! [SPACE] 키를 눌러 다음 방으로 진입하세요!"
+            
+        guide_text = sub_font.render(guide_str, True, (255, 255, 150))
+        screen.blit(guide_text, (30, SCREEN_HEIGHT - 50))
+        
+        if puzzle_manager.is_cleared:
+            if not clear_sound_played:
+                sound_manager.stop_bgm()           
+                sound_manager.play_effect("clear") 
+                clear_sound_played = True
+                
+            if puzzle_manager.current_level < 5:
+                clear_text = font.render("🎉 STAGE CLEAR!", True, (100, 255, 100))
+            else:
+                clear_text = font.render("🏆 ALL STAGES CLEARED!", True, (255, 215, 0))
+            screen.blit(clear_text, (1280 // 2 - 120, 50))
+
+        pygame.display.flip()
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
