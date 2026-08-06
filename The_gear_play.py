@@ -6,6 +6,8 @@ from assets.stage.puzzle import PuzzleManager
 from assets.player.player_manager import PlayerManager
 from assets.sounds.sound_manager import SoundManager
 from assets.music.music_manager import MusicManager
+##
+from assets.stage import stage01_manager
 
 pygame.init()
 pygame.mixer.init()
