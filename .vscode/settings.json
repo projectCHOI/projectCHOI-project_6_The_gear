@@ -3,5 +3,6 @@
     "python.analysis.extraPaths": [],
     "code-runner.executorMap": {
         "python": "C:\\users\\boss3\\appdata\\local\\programs\\python\\python312\\python.exe -u"
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }
