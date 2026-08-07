@@ -1,6 +1,4 @@
 import pygame
-import sys
-import os
 
 class PuzzleManager:
     def __init__(self):
