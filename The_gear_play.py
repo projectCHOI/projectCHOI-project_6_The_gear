@@ -8,6 +8,10 @@ from assets.sounds.sound_manager import SoundManager
 from assets.music.music_manager import MusicManager
 ##
 from assets.stage import stage01_manager
+from assets.stage import stage02_manager
+from assets.stage import stage03_manager
+from assets.stage import stage04_manager
+from assets.stage import stage05_manager
 
 pygame.init()
 pygame.mixer.init()
