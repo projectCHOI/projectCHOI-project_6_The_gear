@@ -1,17 +1,10 @@
 import pygame
 import sys
-import os
 
 from assets.stage.puzzle import PuzzleManager
 from assets.player.player_manager import PlayerManager
 from assets.sounds.sound_manager import SoundManager
 from assets.music.music_manager import MusicManager
-##
-from assets.stage import stage01_manager
-from assets.stage import stage02_manager
-from assets.stage import stage03_manager
-from assets.stage import stage04_manager
-from assets.stage import stage05_manager
 
 pygame.init()
 pygame.mixer.init()
@@ -72,8 +65,8 @@ def main():
                     player_manager.gain_gear_to_inventory("key_item", 1)
                     music_manager.play_install_sound() 
                 elif interaction == "unlock_door":
-                    # 문이 열리는 짜릿한 연출 효과음
-                    pass
+                    music_manager.play_install_sound()
+                    # pass
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 player_manager.handle_event(event, puzzle_manager.gears)

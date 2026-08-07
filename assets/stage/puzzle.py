@@ -29,9 +29,13 @@ class PuzzleManager:
         self.door_unlocked = False
         self.current_level = level_num
 
-        stage_module_name = f"stage{level_num:02d}_manager"
+        stage_module_name = f"assets.stage.stage{level_num:02d}_manager"
+
         try:
-            stage_module = __import__(stage_module_name)
+            stage_module = __import__(
+                stage_module_name,
+                fromlist=["get_stage_data"]
+            )
             self.gears, self.clear_condition = stage_module.get_stage_data()
             print(f"📦 레벨 {level_num} 스토리 동기 팩 이식 완료.")
         except Exception as e:
