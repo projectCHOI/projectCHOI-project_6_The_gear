@@ -10,7 +10,7 @@ class MusicManager:
 def _load_assets(self):
         try:
             for i in range(1, 6):
-                filename = f"music05.wav" if i < 10 else f"music{i}.wav" # 형식 보정
+                filename = f"music05.wav"
                 filename = f"music0{i}.wav" # 올려주신 music01 규칙 적용
                 install_path = os.path.join(self.base_path, filename)
                 
