@@ -25,7 +25,7 @@ def main():
     sound_manager = SoundManager()
     music_manager = MusicManager()
     
-    sound_manager.play_bgm("main")
+    sound_manager.play_bgm("play")
     clear_sound_played = False
     font = pygame.font.SysFont("malgungothic", 28)
     sub_font = pygame.font.SysFont("malgungothic", 20)
@@ -33,7 +33,6 @@ def main():
 
     while running:
         dt = clock.tick(FPS) / 1000.0 
-        mouse_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,7 +45,7 @@ def main():
                     if next_level <= 5:
                         puzzle_manager.load_level(next_level)
                         clear_sound_played = False
-                        sound_manager.play_bgm("main") 
+                        sound_manager.play_bgm("play") 
                     else:
                         print("전체 캠페인 완수!")
             
