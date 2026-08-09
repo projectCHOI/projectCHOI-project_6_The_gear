@@ -33,35 +33,48 @@ class Gear:
                     other_gear.connected_gears.append(self)  # 양방향 연결
 
     def update_rotation(self, dt, visited=None):
-        """
-        동력 전달 법칙에 따라 연결된 모든 톱니바퀴의 회전각을 업데이트하는 재귀 함수
-        """
-        if visited is None:
-            visited = set()
-            
-        visited.add(self)
+def update_rotation(self, dt, visited=None):
+    if visited is None:
+        visited = set()
 
-        # 동력원(Driver)인 경우 스스로 지정된 속도만큼 회전
-        if self.is_driver and len(visited) == 1:
+    if self in visited:
+        return
+
+    visited.add(self)
+
+    if self.is_driver:
+
+        # 자동 회전 속도가 있는 경우
+        if self.target_speed != 0:
             self.angle += self.target_speed * dt
 
-        # 연결된 다른 톱니바퀴들에게 동력과 회전각 전달
-        for next_gear in self.connected_gears:
-            if next_gear not in visited:
-                # [동력 전달 핵심 공식]
-                # 1. 방향은 반대 (-1)
-                # 2. 회전각 변화량은 이빨 개수 비율에 반비례 (내 이빨 수 / 상대 이빨 수)
-                angle_delta = (self.target_speed * dt) if self.is_driver and len(visited) == 1 else (self.angle - getattr(self, 'prev_angle', self.angle))
-                
-                # 상대방의 이전 각도를 백업하고 새로운 각도 계산
-                next_gear.prev_angle = next_gear.angle
-                next_gear.angle -= angle_delta * (self.teeth / next_gear.teeth)
-                
-                # 연쇄적으로 다음 톱니바퀴 업데이트 (그래프 탐색)
-                next_gear.update_rotation(dt, visited)
-                
-        # 다음 프레임 계산을 위해 현재 각도를 저장
-        self.prev_angle = self.angle
+        # 이번 프레임의 실제 회전량
+        angle_delta = self.angle - self.prev_angle
+
+    else:
+
+        # 일반 기어는 자신의 이전 각도와 비교
+        angle_delta = self.angle - self.prev_angle
+
+    for next_gear in self.connected_gears:
+
+        if next_gear in visited:
+            continue
+
+        # 이빨 수 비율에 따른 회전량
+        transmitted_delta = (
+            -angle_delta *
+            (self.teeth / next_gear.teeth)
+        )
+
+        next_gear.angle += transmitted_delta
+
+        next_gear.update_rotation(
+            dt,
+            visited
+        )
+
+    self.prev_angle = self.angle
 
     def draw(self, screen):
         """화면에 톱니바퀴를 그리는 함수"""
