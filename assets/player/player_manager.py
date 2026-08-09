@@ -17,9 +17,10 @@ class PlayerManager:
         
         # 2. 인벤토리 관리 (가방에 소지한 톱니바퀴 종류별 개수)
         self.inventory = {
-            "small_gear": 3,   # 소형 톱니바퀴
-            "medium_gear": 2,  # 중형 톱니바퀴
-            "large_gear": 1    # 대형 톱니바퀴
+            "small_gear": 3,
+            "medium_gear": 2,
+            "large_gear": 1,
+            "key_item": 0
         }
         
         # 3. 마우스 입력 및 조작 제어 설정 (기존 player.py 흡수)
@@ -133,6 +134,7 @@ class PlayerManager:
         
     def gain_gear_to_inventory(self, item_type, amount=1):
         """아이템을 인벤토리에 추가"""
+    
         if amount <= 0:
             return
     
