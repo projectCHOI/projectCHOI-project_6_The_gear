@@ -130,7 +130,22 @@ class PlayerManager:
             return True
         print(f"❌ {gear_type} 부품이 부족합니다!")
         return False
-
+        
+    def gain_gear_to_inventory(self, item_type, amount=1):
+        """아이템을 인벤토리에 추가"""
+        if amount <= 0:
+            return
+    
+        if item_type not in self.inventory:
+            self.inventory[item_type] = 0
+    
+        self.inventory[item_type] += amount
+    
+        print(
+            f"🎒 {item_type} {amount}개 획득! "
+            f"현재 보유량: {self.inventory[item_type]}"
+        )
+        
     def draw(self, screen):
         if self.current_image:
             draw_y = self.y
