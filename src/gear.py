@@ -11,7 +11,7 @@ class Gear:
         self.is_driver = is_driver
         # 현재 회전 각도 (도 단위, Degree)
         self.angle = 0.0
-        # 회전 속도 (초당 회전 각도, 동력원인 경우 사용)
+        self.prev_angle = 0.0
         self.target_speed = 0.0  
         # 맞물려 있는 다른 톱니바퀴 객체들의 리스트
         self.connected_gears = []
