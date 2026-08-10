@@ -33,48 +33,47 @@ class Gear:
                     other_gear.connected_gears.append(self)  # 양방향 연결
 
     def update_rotation(self, dt, visited=None):
-def update_rotation(self, dt, visited=None):
-    if visited is None:
-        visited = set()
-
-    if self in visited:
-        return
-
-    visited.add(self)
-
-    if self.is_driver:
-
-        # 자동 회전 속도가 있는 경우
-        if self.target_speed != 0:
-            self.angle += self.target_speed * dt
-
-        # 이번 프레임의 실제 회전량
-        angle_delta = self.angle - self.prev_angle
-
-    else:
-
-        # 일반 기어는 자신의 이전 각도와 비교
-        angle_delta = self.angle - self.prev_angle
-
-    for next_gear in self.connected_gears:
-
-        if next_gear in visited:
-            continue
-
-        # 이빨 수 비율에 따른 회전량
-        transmitted_delta = (
-            -angle_delta *
-            (self.teeth / next_gear.teeth)
-        )
-
-        next_gear.angle += transmitted_delta
-
-        next_gear.update_rotation(
-            dt,
-            visited
-        )
-
-    self.prev_angle = self.angle
+        if visited is None:
+            visited = set()
+    
+        if self in visited:
+            return
+    
+        visited.add(self)
+    
+        if self.is_driver:
+    
+            # 자동 회전 속도가 있는 경우
+            if self.target_speed != 0:
+                self.angle += self.target_speed * dt
+    
+            # 이번 프레임의 실제 회전량
+            angle_delta = self.angle - self.prev_angle
+    
+        else:
+    
+            # 일반 기어는 자신의 이전 각도와 비교
+            angle_delta = self.angle - self.prev_angle
+    
+        for next_gear in self.connected_gears:
+    
+            if next_gear in visited:
+                continue
+    
+            # 이빨 수 비율에 따른 회전량
+            transmitted_delta = (
+                -angle_delta *
+                (self.teeth / next_gear.teeth)
+            )
+    
+            next_gear.angle += transmitted_delta
+    
+            next_gear.update_rotation(
+                dt,
+                visited
+            )
+    
+        self.prev_angle = self.angle
 
     def draw(self, screen):
         """화면에 톱니바퀴를 그리는 함수"""
