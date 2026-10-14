@@ -1,1 +1,16 @@
-C:\users\boss3\appdata\local\programs\python\python312\python.exe "The gear play.py"
+* 폴더경로 확인
+Get-Location
+
+* 경로변경
+cd "C:\Users\boss3\OneDrive\바탕 화면\GitHub\project_6_The gear"
+
+* 폴더 안 파일확인
+기본 : Get-ChildItem
+하위 폴더도 함께 확인 : Get-ChildItem -Recurse
+"True" 확인
+
+* LÖVE 실행 파일 확인
+Test-Path "C:\설치_soft\260817_Code\LOVE\love.exe"
+
+* 게임 실행
+& "C:\설치_soft\260817_Code\LOVE\love.exe" .
