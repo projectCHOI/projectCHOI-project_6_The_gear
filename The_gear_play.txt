@@ -1,3 +1,4 @@
+# 기본
 * 폴더경로 확인
 Get-Location
 
@@ -13,4 +14,12 @@ cd "C:\Users\boss3\OneDrive\바탕 화면\GitHub\project_6_The gear"
 Test-Path "C:\설치_soft\260817_Code\LOVE\love.exe"
 
 * 게임 실행
+& "C:\설치_soft\260817_Code\LOVE\love.exe" .
+
+---
+# 파일 확인이 필요 없다면 작업 실행
+* 경로 변경
+cd "C:\Users\boss3\OneDrive\바탕 화면\GitHub\project_6_The gear"
+
+* 게임실행
 & "C:\설치_soft\260817_Code\LOVE\love.exe" .
