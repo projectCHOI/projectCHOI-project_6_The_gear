@@ -1,26 +1,28 @@
-local Gear = require("src.gear")
-local stages = {
-    {title="Power transmission", specs={{400,360,80,24,true},{540,360,60,18}},
-        links={{1,2}}, target=2},
-    {title="Gear ratios", specs={{350,360,100,32,true},{480,360,30,8},{565,360,55,16}},
-        links={{1,2},{2,3}}, target=3},
-    {title="Rotation direction", specs={{320,360,80,24,true},{445,360,45,12},
-        {550,360,60,18},{655,360,45,12}}, links={{1,2},{2,3},{3,4}}, target=4},
-    {title="Diagonal transmission", specs={{320,460,60,18,true},{440,360,80,24},
-        {555,260,55,16}}, links={{1,2},{2,3}}, target=3},
-    {title="Branching power", specs={{480,360,110,36,true},{480,220,40,12},
-        {480,100,80,24},{480,520,60,18},{480,625,45,12}},
-        links={{1,2},{2,3},{1,4},{4,5}}, target=3}
+-- Each stage has a verified example route, but placements are free-form.
+local M={count=5}
+local definitions={
+ {title='First connection',x=340,y=300,radii={36,36,36,36,36},directions={0,0,0,0,0,0}},
+ {title='Mix the sizes',x=340,y=230,radii={48,24,36,48,24},directions={0,0,0,0,0,0}},
+ {title='Turn the corner',x=340,y=200,radii={36,36,36,36,36},directions={0,0,45,45,0,0}},
+ {title='Climb the chain',x=340,y=440,radii={24,48,36,24,48},directions={0,-45,0,-45,0,0}},
+ {title='The final workshop',x=340,y=190,radii={48,36,24,48,36,24},directions={45,0,45,0,-45,0,0}}
 }
-
-local M = {count=#stages}
 function M.create(index)
-    local data = assert(stages[index], "Unknown stage")
-    local gears = {}
-    for _, s in ipairs(data.specs) do
-        gears[#gears+1] = Gear.new(s[1],s[2],s[3],s[4],s[5])
-    end
-    for _, link in ipairs(data.links) do gears[link[1]]:connect(gears[link[2]]) end
-    return {gears=gears, target=gears[data.target], requiredAngle=360, title=data.title}
+ local d=assert(definitions[index],'Unknown stage')
+ local result={title=d.title,source={x=d.x,y=d.y,radius=36},stock={[24]=0,[36]=0,[48]=0},solution={}}
+ local x,y,r=d.x,d.y,36
+ for i=1,#d.radii+1 do
+  local nextR=d.radii[i] or 36
+  local a=math.rad(d.directions[i])
+  x=x+(r+nextR)*math.cos(a); y=y+(r+nextR)*math.sin(a)
+  if i<=#d.radii then
+   result.solution[i]={x=x,y=y,radius=nextR}
+   result.stock[nextR]=result.stock[nextR]+1
+  else result.target={x=x,y=y,radius=nextR} end
+  r=nextR
+ end
+ -- One optional spare; stocks are reset for every room.
+ result.stock[24]=result.stock[24]+1
+ return result
 end
 return M
