@@ -63,3 +63,60 @@ function View.draw(p,font,titleFont)
  local opened=p.phase=='collect' or p.phase=='unlock' or p.phase=='clear'
  g.setColor(0.53,0.30,0.14); g.rectangle('fill',chest.x,chest.y,chest.w,chest.h,5)
  g.setColor(0.93,0.66,0.25); g.setLineWidth(3); g.rectangle('line',chest.x,chest.y,chest.w,chest.h,5)
+ if opened then
+  g.setColor(0.12,0.09,0.07); g.rectangle('fill',chest.x+7,chest.y+7,chest.w-14,chest.h-14,3)
+  g.setColor(0.69,0.41,0.21); g.rectangle('fill',chest.x,chest.y-22,chest.w,20,4)
+ else
+  g.setColor(0.92,0.67,0.27); g.rectangle('fill',chest.x,chest.y+21,chest.w,6)
+  g.rectangle('fill',chest.x+39,chest.y+26,14,17,2)
+ end
+ if p.phase=='collect' then
+  local k=p:keyRect(); g.setColor(1,0.84,0.19)
+  g.setLineWidth(4); g.circle('line',k.x+11,k.y+12,8); g.line(k.x+19,k.y+12,k.x+44,k.y+12,k.x+44,k.y+21)
+  g.line(k.x+36,k.y+12,k.x+36,k.y+19)
+ end
+ g.setScissor()
+ -- Opaque well front hides the chest when it is below the rim.
+ g.setColor(0.15,0.20,0.27); g.rectangle('fill',1000,520,175,80,5)
+ g.setColor(0.38,0.46,0.56); g.rectangle('fill',994,513,187,14,3)
+ text(t('well'),1060,554)
+ if p.phase=='raised' then text(t('clickChest'),1050,chest.y-28,{1,0.84,0.40}) end
+ -- Door stays locked until the key is collected.
+ g.setColor(p.phase=='clear' and {0.28,0.72,0.63} or {0.44,0.29,0.20})
+ g.rectangle('fill',1190,450,60,130,5)
+ g.setColor(0.95,0.78,0.33); g.circle('fill',1237,520,4)
+ text(p.phase=='clear' and t('open') or t('door'),1194,425)
+ text(t('lift',math.floor(p.progress*100)),895,620,{0.40,0.86,0.74})
+ g.setColor(0.19,0.26,0.34); g.rectangle('fill',1020,620,230,12,4)
+ g.setColor(0.35,0.80,0.65); g.rectangle('fill',1020,620,230*p.progress,12,4)
+ if p.hint and p.phase=='build' then
+  for i,s in ipairs(p.data.solution) do
+   g.setColor(0.72,0.84,1,0.35); g.setLineWidth(1)
+   g.circle('line',s.x,s.y,s.radius); g.print(tostring(i),s.x-4,s.y-8)
+  end
+ end
+ for _,edge in ipairs(p.edges) do
+  local a,b=edge[1],edge[2]
+  g.setColor(a.powered and {0.25,0.55,0.49,0.5} or {0.25,0.30,0.37,0.5})
+  g.setLineWidth(2); g.line(a.x,a.y,b.x,b.y)
+ end
+ for _,a in ipairs(p.gears) do a:draw() end
+ text(t('auto'),p.source.x-22,p.source.y-p.source.radius-26,{0.37,0.95,0.78})
+ text(t('goal'),p.target.x-23,p.target.y+p.target.radius+12,{1,0.83,0.36})
+ if p.drag then
+  local preview=p.drag.preview
+  local ghost=Gear.new(preview.x,preview.y,p.drag.radius)
+  ghost:draw(0.70)
+  g.setColor(preview.valid and {0.35,1,0.60,0.8} or {1,0.30,0.30,0.8})
+  g.setLineWidth(2); g.circle('line',preview.x,preview.y,p.drag.radius+7)
+ end
+ if p.jammed then text(t('jammed'),475,550,{1,0.43,0.35}) end
+ if p.noticeTime>0 then text(p.notice,280,650,{1,0.73,0.40})
+ else text(t('placementHelp'),280,650) end
+ g.setColor(0.12,0.17,0.23); g.rectangle('fill',0,682,1280,38)
+ text(p:guide(),25,691,{1,0.88,0.53})
+ if p.phase=='clear' then
+  g.setFont(titleFont); text(p.level==5 and t('allClear') or t('clear'),878,76,{0.41,0.95,0.71})
+ end
+end
+return View
