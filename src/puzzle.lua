@@ -1,5 +1,6 @@
 local Gear=require('src.gear')
 local Stages=require('src.stages')
+local t=require('src.i18n').t
 local Puzzle={}; Puzzle.__index=Puzzle
 local function distance(x,y,a,b) return math.sqrt((x-a)^2+(y-b)^2) end
 local function inside(r,x,y) return x>=r.x and x<=r.x+r.w and y>=r.y and y<=r.y+r.h end
@@ -76,88 +77,3 @@ function Puzzle:placement(x,y,r)
  end
  return best or {x=x,y=y,valid=self:valid(x,y,r)}
 end
-function Puzzle:slot(i) return {x=45,y=190+(i-1)*118,w=190,h=108} end
-function Puzzle:beginDrag(x,y)
- if self.phase~='build' then return end
- for i,r in ipairs(sizes) do
-  if inside(self:slot(i),x,y) then
-   if self.stock[r]>0 then
-    self.stock[r]=self.stock[r]-1; self.drag={radius=r}; self:moveDrag(x,y)
-   else self:message('No gears of this size left.') end
-   return
-  end
- end
- for i=#self.gears,1,-1 do
-  local a=self.gears[i]
-  if a.kind=='placed' and a:contains(x,y) then
-   table.remove(self.gears,i); self.drag={radius=a.radius,original=a,index=i}
-   self:rebuildNetwork(); self:moveDrag(x,y); return
-  end
- end
-end
-function Puzzle:moveDrag(x,y)
- if self.drag then self.drag.x=x; self.drag.y=y; self.drag.preview=self:placement(x,y,self.drag.radius) end
-end
-function Puzzle:cancelDrag()
- local d=self.drag; if not d then return end
- if d.original then table.insert(self.gears,d.index,d.original) else self.stock[d.radius]=self.stock[d.radius]+1 end
- self.drag=nil; self:rebuildNetwork()
-end
-function Puzzle:endDrag(x,y)
- local d=self.drag; if not d then return end
- if inside(self.toolbox,x,y) then
-  self.stock[d.radius]=self.stock[d.radius]+1; self.drag=nil; self:rebuildNetwork(); return 'return'
- end
- local p=self:placement(x,y,d.radius)
- if p.valid then
-  local gear=d.original or Gear.new(p.x,p.y,d.radius)
-  gear.x=p.x; gear.y=p.y; self.gears[#self.gears+1]=gear
-  self.drag=nil; self:rebuildNetwork(); return 'place'
- end
- self:cancelDrag(); self:message('Cannot place here. Keep gears inside the zone without overlap.')
-end
-function Puzzle:removeAt(x,y)
- if self.phase~='build' or self.drag then return end
- for i=#self.gears,1,-1 do
-  local a=self.gears[i]
-  if a.kind=='placed' and a:contains(x,y) then
-   self.stock[a.radius]=self.stock[a.radius]+1; table.remove(self.gears,i); self:rebuildNetwork(); return 'return'
-  end
- end
-end
-function Puzzle:chestRect() return {x=1059,y=585-self.progress*275,w=92,h=64} end
-function Puzzle:keyRect() local b=self:chestRect(); return {x=b.x+22,y=b.y+21,w=50,h=27} end
-function Puzzle:click(x,y)
- if self.phase=='raised' and inside(self:chestRect(),x,y) then self.phase='collect'; return 'open' end
- if self.phase=='collect' and inside(self:keyRect(),x,y) then self.phase='unlock'; self.hasKey=true; return 'key' end
- if self.phase=='unlock' and inside({x=1190,y=450,w=60,h=130},x,y) then
-  self.phase='clear'; self.hasKey=false; return 'clear'
- end
-end
-function Puzzle:update(dt)
- self.noticeTime=math.max(0,self.noticeTime-dt)
- local active=self.phase=='build'
- for _,a in ipairs(self.gears) do
-  if active then a.angle=(a.angle+a.speed*dt)%(2*math.pi) end
- end
- if active and self.target.powered and not self.jammed then
-  -- A ratchet keeps already lifted height; either target direction drives the winch.
-  self.progress=math.min(1,self.progress+math.abs(self.target.speed)*dt/(math.pi*4))
-  self.beltOffset=(self.beltOffset+math.abs(self.target.speed)*dt*35)%24
-  if self.progress>=1 then self:cancelDrag(); self.phase='raised'; return 'raised' end
- end
-end
-function Puzzle:next()
- if self.phase=='clear' and self.level<Stages.count then self:load(self.level+1); return true end
- return false
-end
-function Puzzle:guide()
- if self.phase=='raised' then return 'Chest is up! Click the CLOSED CHEST to open it.' end
- if self.phase=='collect' then return 'Click the golden KEY inside the open chest.' end
- if self.phase=='unlock' then return 'Key collected. Click the door at the far right.' end
- if self.phase=='clear' then return self.level==5 and 'All stages cleared! ENTER: play again.' or 'Room complete! SPACE: next stage.' end
- if self.jammed then return 'Gears are JAMMED. Remove a gear from the conflicting loop.' end
- if self.target.powered then return 'Power connected! The winch is raising the chest.' end
- return 'Drag gears from TOOLBOX. Connect the moving green source to the GOLD gear.'
-end
-return Puzzle
