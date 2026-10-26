@@ -44,3 +44,35 @@ function love.update(dt)
  local x,y=love.mouse.getPosition();puzzle:moveDrag(x,y)
  soundFor(puzzle:update(math.min(dt,0.1)));player:update(dt)
 end
+function love.mousepressed(x,y,button)
+ if screen=='language' then
+  if button==1 then
+   for _,b in ipairs(buttons) do
+    if contains(b,x,y) then startGame(b.language);return end
+   end
+  end
+  return
+ end
+ if button==1 then
+  if puzzle.phase=='build' then puzzle:beginDrag(x,y) else soundFor(puzzle:click(x,y)) end
+ elseif button==2 then soundFor(puzzle:removeAt(x,y)) end
+end
+function love.mousereleased(x,y,button)
+ if screen=='game' and button==1 then soundFor(puzzle:endDrag(x,y)) end
+end
+function love.focus(focused)
+ if screen=='game' and not focused then puzzle:cancelDrag() end
+end
+function love.keypressed(key)
+ if screen=='language' then
+  if key=='escape' then love.event.quit() end
+  return
+ end
+ if key=='escape' then
+  if puzzle.drag then puzzle:cancelDrag() else love.event.quit() end
+ elseif key=='r' then puzzle:load(puzzle.level);audio:playBgm()
+ elseif key=='h' then puzzle.hint=not puzzle.hint
+ elseif key=='m' then audio:toggleMute()
+ elseif key=='space' then if puzzle:next() then audio:playBgm() end
+ elseif key=='return' and puzzle.phase=='clear' and puzzle.level==5 then puzzle:load(1);audio:playBgm() end
+end
