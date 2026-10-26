@@ -76,3 +76,29 @@ function love.keypressed(key)
  elseif key=='space' then if puzzle:next() then audio:playBgm() end
  elseif key=='return' and puzzle.phase=='clear' and puzzle.level==5 then puzzle:load(1);audio:playBgm() end
 end
+local function drawLanguageMenu()
+ local g=love.graphics
+ local x,y=love.mouse.getPosition()
+ g.setFont(titleFont);g.setColor(0.90,0.94,1)
+ g.printf('THE GEAR : THE PUZZLER',0,130,1280,'center')
+ g.setFont(font);g.setColor(0.57,0.77,0.86)
+ g.printf(fontReady and '언어를 선택하세요 / Choose your language' or 'Choose your language',0,205,1280,'center')
+ for _,b in ipairs(buttons) do
+  local enabled=b.language=='en' or fontReady
+  local hovered=enabled and contains(b,x,y)
+  g.setColor(hovered and {0.16,0.36,0.38} or {0.10,0.16,0.23})
+  g.rectangle('fill',b.x,b.y,b.w,b.h,12)
+  g.setColor(enabled and (hovered and {0.40,0.95,0.78} or {0.30,0.52,0.64}) or {0.30,0.30,0.33})
+  g.setLineWidth(2);g.rectangle('line',b.x,b.y,b.w,b.h,12)
+  g.setFont(titleFont);g.setColor(enabled and {0.93,0.96,1} or {0.50,0.50,0.53})
+  g.printf(b.language=='ko' and (fontReady and '한국어' or 'Korean (font required)') or 'English',b.x,b.y+25,b.w,'center')
+ end
+ g.setFont(font);g.setColor(0.72,0.77,0.83)
+ g.printf(fontReady and '원하는 언어를 마우스로 클릭하세요. / Click a language to begin.' or 'Add assets/font/SLEIGothicOTF.otf and restart to enable Korean.',100,525,1080,'center')
+ g.printf('ESC: '..(fontReady and '종료 / Quit' or 'Quit'),0,610,1280,'center')
+end
+function love.draw()
+ if screen=='language' then drawLanguageMenu();return end
+ View.draw(puzzle,font,titleFont)
+ love.graphics.setFont(font);player:draw(puzzle.hasKey)
+end
