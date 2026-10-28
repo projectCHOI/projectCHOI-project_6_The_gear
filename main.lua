@@ -3,7 +3,7 @@ local Player=require('src.player')
 local Audio=require('src.audio')
 local View=require('src.view')
 local I18n=require('src.i18n')
-local puzzle,player,audio,font,titleFont
+local puzzle,player,audio,font,titleFont,logoFont,titleImage
 local screen='language'
 local fontReady=false
 local fontPath='assets/font/SLEIGothicOTF.otf'
@@ -25,13 +25,19 @@ function love.load()
   font=love.graphics.newFont(15);titleFont=love.graphics.newFont(25)
   print('Font could not be loaded: '..fontPath..' / '..tostring(normal))
  end
- -- No game objects or background music are started before language selection.
+ local logoOk,logo=pcall(love.graphics.newFont,fontPath,58)
+ logoFont=logoOk and logo or love.graphics.newFont(58)
+ local imageOk,image=pcall(love.graphics.newImage,'assets/images/project_6_The gear.PNG')
+ titleImage=imageOk and image or nil
+ if not imageOk then print('Title image could not be loaded: '..tostring(image)) end
  screen='language';puzzle=nil;player=nil;audio=nil
 end
 local function startGame(language)
- -- Default fonts cannot display Korean reliably. Keep the menu visible if missing.
  if language=='ko' and not fontReady then return end
  I18n.set(language)
+ screen='title'
+end
+local function beginPlay()
  puzzle=Puzzle.new();player=Player.new();audio=Audio.new()
  screen='game';audio:playBgm()
 end
@@ -53,6 +59,13 @@ function love.mousepressed(x,y,button)
   end
   return
  end
+ if screen=='title' then
+  if button==1 then
+   if contains({x=440,y=465,w=400,h=78},x,y) then beginPlay()
+   elseif contains({x=490,y=565,w=300,h=50},x,y) then screen='language' end
+  end
+  return
+ end
  if button==1 then
   if puzzle.phase=='build' then puzzle:beginDrag(x,y) else soundFor(puzzle:click(x,y)) end
  elseif button==2 then soundFor(puzzle:removeAt(x,y)) end
@@ -66,6 +79,11 @@ end
 function love.keypressed(key)
  if screen=='language' then
   if key=='escape' then love.event.quit() end
+  return
+ end
+ if screen=='title' then
+  if key=='return' or key=='space' then beginPlay()
+  elseif key=='escape' then screen='language' end
   return
  end
  if key=='escape' then
@@ -94,11 +112,44 @@ local function drawLanguageMenu()
   g.printf(b.language=='ko' and (fontReady and '한국어' or 'Korean (font required)') or 'English',b.x,b.y+25,b.w,'center')
  end
  g.setFont(font);g.setColor(0.72,0.77,0.83)
- g.printf(fontReady and '원하는 언어를 마우스로 클릭하세요. / Click a language to begin.' or 'Add assets/font/SLEIGothicOTF.otf and restart to enable Korean.',100,525,1080,'center')
+ g.printf(fontReady and '원하는 언어를 마우스로 클릭하세요. / Click to choose your language.' or 'Add assets/font/SLEIGothicOTF.otf and restart to enable Korean.',100,525,1080,'center')
  g.printf('ESC: '..(fontReady and '종료 / Quit' or 'Quit'),0,610,1280,'center')
+end
+local function drawTitleScreen()
+ local g=love.graphics
+ local ko=I18n.language=='ko'
+ if titleImage then
+  local w,h=titleImage:getDimensions()
+  local scale=math.max(1280/w,720/h)
+  g.setColor(1,1,1)
+  g.draw(titleImage,(1280-w*scale)/2,(720-h*scale)/2,0,scale,scale)
+ end
+ 
+ g.setColor(245/255,245/255,245/255);g.rectangle('fill',300,105,680,245,20)
+ g.setFont(logoFont);g.setColor(0,0,0)
+ g.printf('THE GEAR',0,140,1280,'center')
+ g.setFont(titleFont);g.setColor(0.2,0.2,0.2)
+ g.printf('THE PUZZLER',0,225,1280,'center')
+ g.setFont(font);g.setColor(0.2,0.2,0.2)
+ g.printf(ko and '톱니바퀴를 이어 우물 속 열쇠를 찾아보세요.' or 'Connect the gears. Raise the chest. Discover the key.',0,290,1280,'center')
+ local mx,my=love.mouse.getPosition()
+ local function titleButton(rect,label,large)
+  local hover=contains(rect,mx,my)
+  g.setColor(hover and {0.2,0.2,0.2} or {217/255,217/255,217/255})
+  g.rectangle('fill',rect.x,rect.y,rect.w,rect.h,12)
+  g.setLineWidth(2);g.setColor({0.2,0.2,0.2})
+  g.rectangle('line',rect.x,rect.y,rect.w,rect.h,12)
+  g.setFont(large and titleFont or font);g.setColor(hover and {1,1,1} or {0,0,0})
+  g.printf(label,rect.x,rect.y+(large and 23 or 15),rect.w,'center')
+ end
+ titleButton({x=440,y=465,w=400,h=78},ko and '게임 시작' or 'START GAME',true)
+ titleButton({x=490,y=565,w=300,h=50},ko and '언어 다시 선택' or 'CHANGE LANGUAGE',false)
+ g.setFont(font);g.setColor(0.2,0.2,0.2)
+ g.printf(ko and 'ENTER / SPACE: 시작    ESC: 언어 선택' or 'ENTER / SPACE: start    ESC: choose language',0,655,1280,'center')
 end
 function love.draw()
  if screen=='language' then drawLanguageMenu();return end
+ if screen=='title' then drawTitleScreen();return end
  View.draw(puzzle,font,titleFont)
  love.graphics.setFont(font);player:draw(puzzle.hasKey)
 end
