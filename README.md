@@ -3,6 +3,20 @@
 LÖVE2D / Lua 게임. 
 움직이는 초록 동력원에서 황금 톱니바퀴까지 톱니바퀴를 배치해 동력을 전달하는 구조.
 
+## 게임 이미지
+<div align="center">
+  <img src="./assets/images/project_6_The%20gear_a.PNG" width="300" alt="게임 이미지 A" />
+  <img src="./assets/images/project_6_The%20gear_b.PNG" width="300" alt="게임 이미지 B" />
+  <img src="./assets/images/project_6_The%20gear_c.PNG" width="300" alt="게임 이미지 C" />
+</div>
+
+## 플레이 영상
+<div align="center">
+  <img src="./assets/GIF/project_6_The%20gear_GIF-a.gif" width="300" alt="게임 플레이 A" />
+  <img src="./assets/GIF/project_6_The%20gear_GIF-b.gif" width="300" alt="게임 플레이 B" />
+  <img src="./assets/GIF/project_6_The%20gear_GIF-c.gif" width="300" alt="게임 플레이 C" />
+</div>
+
 ## 추가 기능
 
 **한국어 / English 선택**
