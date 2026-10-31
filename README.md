@@ -5,16 +5,16 @@ LÖVE2D / Lua 게임.
 
 ## 게임 이미지
 <div align="center">
-  <img src="./assets/images/project_6_The%20gear_a.PNG" width="300" alt="게임 이미지 A" />
-  <img src="./assets/images/project_6_The%20gear_b.PNG" width="300" alt="게임 이미지 B" />
-  <img src="./assets/images/project_6_The%20gear_c.PNG" width="300" alt="게임 이미지 C" />
+  <img src="./assets/images/project_6_The%20gear_a.PNG" width="290" alt="게임 이미지 A" />
+  <img src="./assets/images/project_6_The%20gear_b.PNG" width="290" alt="게임 이미지 B" />
+  <img src="./assets/images/project_6_The%20gear_c.PNG" width="290" alt="게임 이미지 C" />
 </div>
 
 ## 플레이 영상
 <div align="center">
-  <img src="./assets/GIF/project_6_The%20gear_GIF-a.gif" width="300" alt="게임 플레이 A" />
-  <img src="./assets/GIF/project_6_The%20gear_GIF-b.gif" width="300" alt="게임 플레이 B" />
-  <img src="./assets/GIF/project_6_The%20gear_GIF-c.gif" width="300" alt="게임 플레이 C" />
+  <img src="./assets/GIF/project_6_The%20gear_GIF-a.gif" width="290" alt="게임 플레이 A" />
+  <img src="./assets/GIF/project_6_The%20gear_GIF-b.gif" width="290" alt="게임 플레이 B" />
+  <img src="./assets/GIF/project_6_The%20gear_GIF-c.gif" width="290" alt="게임 플레이 C" />
 </div>
 
 ## 추가 기능
